@@ -1,20 +1,13 @@
 var express = require('express');
+var bodyParser = require('body-parser');
+
 var app = express();
 var PORT = process.env.PORT || 3000;
+var todos = [];
+var todoNextId = 1;
 
-var todos = [{
-	id: 1,
-	description: 'Meet mom for lunch',
-	completed: false
-}, {
-	id: 2,
-	description: 'Go to market',
-	completed: false
-}, {
-	id: 3,
-	description: 'Clean the bedroom',
-	completed: true
-}];
+
+app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
 	res.send('Todo API Root');
@@ -30,7 +23,6 @@ app.get('/todos', function (req, res) {
 app.get('/todos/:id', function (req, res) {
 	var todoId = parseInt(req.params.id, 10);
 
-	//Iterate of todos array. Find match.
 	var matchedTodo;
 
 	todos.forEach(function (todo) {
@@ -45,8 +37,19 @@ app.get('/todos/:id', function (req, res) {
 	} else {
 		res.status(404).send();
 	}
+});
 
-	//res.send('Asking for todo with id of ' + req.params.id);
+// POST /todos
+app.post('/todos', function (req, res) {
+	var body = req.body;
+
+	body.id = todoNextId++;
+
+	console.log(body);
+
+	todos.push(body);
+
+	res.json(body);
 
 });
 
