@@ -2,7 +2,7 @@ var Sequelize = require('sequelize');
 var env = process.env.NODE_ENV || 'development';
 var sequelize;
 if (env === 'production') {
-	sequelize = new Sequelize(process.env.DATABASE_URL , {
+	sequelize = new Sequelize(process.env.DATABASE_URL, {
 		dialact: 'postgres'
 	});
 } else {
@@ -19,5 +19,8 @@ db.todo = sequelize.import(__dirname + '/models/todo.js');
 db.user = sequelize.import(__dirname + '/models/user.js');
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+
+db.todo.belongsTo(db.user);
+db.user.hasMany(db.todo);
 
 module.exports = db;
